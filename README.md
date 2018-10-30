@@ -137,6 +137,15 @@ pipeline
 					label class 	:
 
 
+all flow
+
+	0 init
+
+	1 make pipeline
+
+	2 
+
+
 
 
 
