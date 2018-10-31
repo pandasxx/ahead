@@ -15,6 +15,21 @@ cfg = __C
 __C.lbp = edict()
 __C.lbp.angle = 0
 
+#
+# xception pre param for 2 classes
+#
+__C.xception_pre = edict()
+__C.xception_pre.thresh = 0.5
+__C.xception_pre.size = 299
+__C.xception_pre.weights_file = os.path.join(curr_path, "dataset_files/Xception-pre_finetune_40.h5")
+__C.xception_pre.gram_ratio = 0.3
+
+__C.xception_pre.classes 			= ["ABNORMAL", "NORMAL"]
+__C.xception_pre.result 			= [1,                		 0]
+__C.xception_pre.is_normal 	= 0
+__C.xception_pre.is_abnormal = 1
+__C.xception_pre.class_num = 2
+__C.xception_pre.batch_size = 16
 
 # #
 # # darknet param for 5 classes
