@@ -3,8 +3,10 @@ import math
 import random
 import os
 import sys
+import cv2
 import scipy.misc
 import numpy as np
+from PIL import Image
 
 sys.path.append('../../')
 from config.config import cfg
@@ -130,6 +132,10 @@ load_image = lib.load_image_color
 load_image.argtypes = [c_char_p, c_int, c_int]
 load_image.restype = IMAGE
 
+load_image_from_memory = lib.load_image_from_memory_color
+load_image_from_memory.argtypes = [POINTER(c_char), c_int, c_int, c_int]
+load_image_from_memory.restype = IMAGE
+
 rgbgr_image = lib.rgbgr_image
 rgbgr_image.argtypes = [IMAGE]
 
@@ -165,6 +171,28 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
             if dets[j].prob[i] > 0:
                 b = dets[j].bbox
                 res.append((meta.names[i].decode('utf-8'), dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+    res = sorted(res, key=lambda x: -x[1])
+    free_image(im)
+    free_detections(dets, num)
+    return res
+
+def detect_on_memory(net, meta, image_string, thresh=.5, hier_thresh=.5, nms=.45):
+
+    im = load_image_from_memory(image_string, len(image_string), 0, 0)
+
+    num = c_int(0)
+    pnum = pointer(num)
+    predict_image(net, im)
+    dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
+    num = pnum[0]
+    if (nms): do_nms_obj(dets, num, meta.classes, nms);
+
+    res = []
+    for j in range(num):
+        for i in range(meta.classes):
+            if dets[j].prob[i] > 0:
+                b = dets[j].bbox
+                res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
     res = sorted(res, key=lambda x: -x[1])
     free_image(im)
     free_detections(dets, num)

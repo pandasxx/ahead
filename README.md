@@ -67,12 +67,12 @@ pipeline
 		out:
 			list: 		
 				dict 608
-					x 		: top left corner coordinate x
-					y 		: top left corner coordinate y
-					w 		: width of the image
-					h  		: height of the image
-					img_data 	: numpy image data 608
-					index       : 608 images index
+					x 			: top left corner coordinate x
+					y 			: top left corner coordinate y
+					w 			: width of the image
+					h  			: height of the image
+					img_data 		: numpy image data 608
+					index       		: 608 images index
 			
 
 	4 run the yolo cell detect algo
